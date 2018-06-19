@@ -1,3 +1,4 @@
+// Package pqutil
 package pqutil // import "github.com/dangersalad/go-pqutil"
 
 import (
