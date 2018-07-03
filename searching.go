@@ -3,6 +3,7 @@ package pqutil
 import (
 	"fmt"
 	"github.com/pkg/errors"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -69,5 +70,34 @@ func ParseAmountQuery(key string, qs []string) (interface{}, []interface{}, erro
 	}
 
 	return fmt.Sprintf(`(%s)`, strings.Join(sqls, " AND ")), args, nil
+
+}
+
+var sortFilter = regexp.MustCompile(`[^a-z]`)
+
+// ParseSort will take a string containing a column and direction and
+// return them or an error if the string is invalid
+func ParseSort(sort string) (column, order string, err error) {
+	sort = strings.TrimSpace(sort)
+	parts := strings.Split(sort, ":")
+	if len(parts) == 0 || len(parts) > 2 {
+		return "", "", errors.Errorf("invalid sort: %s", sort)
+	}
+	column = parts[0]
+	o := "desc"
+	if len(parts) == 2 {
+		o = sortFilter.ReplaceAllString(strings.ToLower(parts[1]), "")
+	}
+
+	switch o {
+	case "desc", "d", "down", "descending", "hightolow", "":
+		order = "DESC"
+	case "asc", "a", "up", "ascending", "lowtohigh":
+		order = "ASC"
+	default:
+		return "", "", errors.Errorf("invalid sort order: %s", o)
+	}
+
+	return
 
 }
