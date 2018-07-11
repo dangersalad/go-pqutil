@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	env "github.com/dangersalad/go-environment"
 	database "github.com/dangersalad/go-pqutil"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose"
@@ -10,13 +11,22 @@ import (
 )
 
 var (
-	flags = flag.NewFlagSet("migrate", flag.ExitOnError)
-	dir   = flags.String("dir", "/sql", "directory with migration files")
+	flags                = flag.NewFlagSet("migrate", flag.ExitOnError)
+	dir                  = flags.String("dir", "/sql", "directory with migration files")
+	envKeyGooseTableName = "GOOSE_TABLE"
 )
 
 func main() {
 	flags.Usage = usage
 	flags.Parse(os.Args[1:])
+
+	params := env.ReadOptionsAllowMissing(env.Options{
+		envKeyGooseTableName: "",
+	})
+
+	if params[envKeyGooseTableName] != "" {
+		goose.SetTableName(params[envKeyGooseTableName])
+	}
 
 	args := flags.Args()
 
