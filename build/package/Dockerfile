@@ -1,6 +1,5 @@
-FROM golang:1.10 as gobuild
+FROM dangersalad/golang-vgo:1.10-alpine as gobuild
 WORKDIR /app
-RUN go get -u golang.org/x/vgo
 COPY . ./
 RUN CGO_ENABLED=0 vgo build -o /migrate $(head -1 go.mod | awk '{print $2}')/cmd/migrate
 
