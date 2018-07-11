@@ -58,9 +58,9 @@ func ParseAmountQuery(key string, qs []string) (interface{}, []interface{}, erro
 		sqlStr := fmt.Sprintf("%s %s ?", key, op)
 		sqls = append(sqls, sqlStr)
 
-		if dateVal, err := time.Parse(time.RFC3339, value); err == nil {
+		if dateVal, err := time.Parse(time.RFC3339Nano, value); err == nil {
 			args = append(args, dateVal)
-		} else if dateVal, err := time.Parse(time.RFC3339Nano, value); err == nil {
+		} else if dateVal, err := time.Parse(time.RFC3339, value); err == nil {
 			args = append(args, dateVal)
 		} else if intVal, err := strconv.ParseInt(value, 10, 64); err == nil {
 			args = append(args, intVal)
