@@ -1,0 +1,6 @@
+github.com/dangersalad/go-environment v0.2.2/go.mod h1:tq28E5WUhlOKAY5d2nbTFk0i0E6MnGjzLLNCR0Lo4dE=
+github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
+github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
+github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/pressly/goose v0.0.0-20180503152455-95600eb369b1 h1:xkeIT4bJyH8MkSlPQ7DfnmPV9BcL6aaEHdhbYMFHhlU=
+github.com/pressly/goose v0.0.0-20180503152455-95600eb369b1/go.mod h1:m+QHWCqxR3k8D9l7qfzuC/djtlfzxr34mozWDYEu1z8=
