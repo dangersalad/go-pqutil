@@ -1,14 +1,14 @@
-// Package pqutil
+// Package pqutil has utilities for working with postgres
 package pqutil // import "github.com/dangersalad/go-pqutil"
 
 import (
 	"database/sql"
 	"fmt"
+	"time"
+
 	env "github.com/dangersalad/go-environment"
 	// we are using postgres for this
 	_ "github.com/lib/pq"
-	"github.com/pkg/errors"
-	"time"
 )
 
 const (
@@ -69,12 +69,12 @@ func Connect(attempts int) (*sql.DB, error) {
 	db, err := sql.Open("postgres", dsn)
 
 	if err != nil {
-		return reattemptConnect(attempts, errors.Wrap(err, "connecting to database"))
+		return reattemptConnect(attempts, fmt.Errorf("connecting to database: %w", err))
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return reattemptConnect(attempts, errors.Wrap(err, "pinging database"))
+		return reattemptConnect(attempts, fmt.Errorf("pinging database: %w", err))
 	}
 
 	envVars = params
