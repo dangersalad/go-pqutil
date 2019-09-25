@@ -2,7 +2,7 @@ package pqutil
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
+	"fmt"
 )
 
 // HandleRollback takes an sql.Tx and an error that occured and
@@ -11,7 +11,7 @@ import (
 func HandleRollback(tx *sql.Tx, err error) error {
 	rollErr := tx.Rollback()
 	if rollErr != nil {
-		return errors.Wrapf(err, "rollback failed: %s", rollErr)
+		return fmt.Errorf("rollback failed: %s, %w", rollErr, err)
 	}
 	return err
 }

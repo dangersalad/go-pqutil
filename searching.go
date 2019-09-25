@@ -2,7 +2,6 @@ package pqutil
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -29,7 +28,7 @@ func ParseAmountQuery(key string, qs []string) (interface{}, []interface{}, erro
 		if len(parts) == 1 {
 			value = parts[0]
 		} else if len(parts) > 2 { // if too many parts, error out
-			return nil, nil, errors.Errorf("invalid query for %s: %s", key, q)
+			return nil, nil, fmt.Errorf("invalid query for %s: %s", key, q)
 		} else { // assign first part to opFlag, second to value
 			value = parts[1]
 			opFlag = parts[0]
@@ -37,7 +36,7 @@ func ParseAmountQuery(key string, qs []string) (interface{}, []interface{}, erro
 
 		// if value ended up blank, we have a problem
 		if value == "" {
-			return nil, nil, errors.Errorf("invalid query for %s: %s", key, q)
+			return nil, nil, fmt.Errorf("invalid query for %s: %s", key, q)
 		}
 
 		op := ""
@@ -81,7 +80,7 @@ func ParseSort(sort string) (column, order string, err error) {
 	sort = strings.TrimSpace(sort)
 	parts := strings.Split(sort, ":")
 	if len(parts) == 0 || len(parts) > 2 {
-		return "", "", errors.Errorf("invalid sort: %s", sort)
+		return "", "", fmt.Errorf("invalid sort: %s", sort)
 	}
 	column = parts[0]
 	o := "desc"
@@ -95,7 +94,7 @@ func ParseSort(sort string) (column, order string, err error) {
 	case "asc", "a", "up", "ascending", "lowtohigh":
 		order = "ASC"
 	default:
-		return "", "", errors.Errorf("invalid sort order: %s", o)
+		return "", "", fmt.Errorf("invalid sort order: %s", o)
 	}
 
 	return
