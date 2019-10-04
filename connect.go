@@ -57,13 +57,22 @@ func Connect(attempts int) (*sql.DB, error) {
 		return nil, err
 	}
 
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+	envVars = params
+
+	return ConnectTo(attempts,
 		params[EnvKeyHost],
 		params[EnvKeyPort],
 		params[EnvKeyUser],
 		params[EnvKeyPassword],
 		params[EnvKeyDatabase],
-		params[EnvKeySSLMode],
+		params[EnvKeySSLMode])
+
+}
+
+// ConnectTo connects to the specified database given the supplied credentials
+func ConnectTo(attempts int, host, port, user, password, dbname, sslmode string) (*sql.DB, error) {
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		host, port, user, password, dbname, sslmode,
 	)
 
 	db, err := sql.Open("postgres", dsn)
@@ -77,14 +86,11 @@ func Connect(attempts int) (*sql.DB, error) {
 		return reattemptConnect(attempts, fmt.Errorf("pinging database: %w", err))
 	}
 
-	envVars = params
-
-	if params[EnvKeySSLMode] == "disable" {
-		logf("connected to %s with SSL disabled", params[EnvKeyHost])
+	if sslmode == "disable" {
+		logf("connected to %s with SSL disabled", host)
 	}
 
 	return db, nil
-
 }
 
 // GetUsername will return the username that connected to the database
