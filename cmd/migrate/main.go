@@ -1,13 +1,15 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
+	"os"
+
 	env "github.com/dangersalad/go-environment"
 	database "github.com/dangersalad/go-pqutil"
-	_ "github.com/lib/pq"
-	"github.com/pressly/goose"
-	"os"
+	"github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 )
 
 var (
@@ -17,6 +19,8 @@ var (
 )
 
 func main() {
+	goose.SetVerbose(true)
+
 	flags.Usage = usage
 	flags.Parse(os.Args[1:])
 
@@ -64,6 +68,28 @@ func main() {
 	}
 
 	if err := goose.Run(command, db, *dir, arguments...); err != nil {
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) {
+
+			fmt.Println("Severity:", pqErr.Severity)
+			fmt.Println("Code:", pqErr.Code)
+			fmt.Println("Message:", pqErr.Message)
+			fmt.Println("Detail:", pqErr.Detail)
+			fmt.Println("Hint:", pqErr.Hint)
+			fmt.Println("Position:", pqErr.Position)
+			fmt.Println("InternalPosition:", pqErr.InternalPosition)
+			fmt.Println("InternalQuery:", pqErr.InternalQuery)
+			fmt.Println("Where:", pqErr.Where)
+			fmt.Println("Schema:", pqErr.Schema)
+			fmt.Println("Table:", pqErr.Table)
+			fmt.Println("Column:", pqErr.Column)
+			fmt.Println("DataTypeName:", pqErr.DataTypeName)
+			fmt.Println("Constraint:", pqErr.Constraint)
+			fmt.Println("File:", pqErr.File)
+			fmt.Println("Line:", pqErr.Line)
+			fmt.Println("Routine:", pqErr.Routine)
+
+		}
 		die(err)
 	}
 }
